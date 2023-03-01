@@ -1,32 +1,35 @@
 pipeline {
-    agent any
-
-    stages {
-        stage ('Compile Stage') {
-
+        agent any
+        stages {
+            stages ('Git-Checkout') {
+                steps {
+                        echo "Checking out from Git Repo";
+                        git 'https://github.com/NilamSingh21/PipelineScript.git'
+                      }
+                  }
+        
+        stage('Build') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean compile'
+                    echo "Running the checked-out project !";
+                  }
                 }
-            }
-        }
-
-        stage ('Testing Stage') {
-
+        
+        stage('Test') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
+                echo "Running Unit Tests";
+                   }
                 }
-            }
-        }
-
-
-        stage ('Deployment Stage') {
+        
+        stage('Quality') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
+                echo "Verifying Quality Gates";
+                  }
                 }
-            }
+        
+        stage('Deploy') {
+            steps {
+                echo "Deploying to stage environment for test !";
+                   }
+              }
         }
-    }
 }
